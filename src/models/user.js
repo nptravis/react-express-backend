@@ -24,10 +24,16 @@ module.exports = (sequelize, DataTypes) => {
       user.password = hashedPw
     })
   })
-  User.prototype.validatePassword = function(plainTextPassword) {
-    console.log(this.password, plainTextPassword)
-    return bcrypt.compare(plainTextPassword, this.password).then(match => {
-      console.log(match)
+
+  User.prototype.validatePassword = function(plainPassword) {
+    const passwordHash = this.password
+    return new Promise((resolve, reject) => {
+      bcrypt.compare(plainPassword, passwordHash, (err, same) => {
+        if (err) {
+          return reject(err)
+        }
+        resolve(same)
+      })
     })
   }
 
@@ -36,6 +42,3 @@ module.exports = (sequelize, DataTypes) => {
   }
   return User
 }
-
-// .then(function(res) {
-// 	      res == true

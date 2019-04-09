@@ -1,6 +1,7 @@
 import config from '../config'
 import jwt from 'jsonwebtoken'
 import db from '../models/index'
+import bcrypt from 'bcrypt'
 
 export const newToken = user => {
   return jwt.sign({ id: user.id }, config.secrets.jwt, {
@@ -39,20 +40,25 @@ export const signin = async (req, res) => {
     return res.status(400).send({ message: 'must supply email and password' })
   }
 
-  db.user
-    .findOne({ where: { email: req.body.email } })
-    .then(user => {
-      if (!user.validatePassword(req.body.password)) {
-        throw new Error('Password is not valid.')
-      } else {
-        const token = newToken(user)
-        return res.status(201).send({ token })
-      }
-    })
-    .catch(err => {
-      console.log(err)
-      return res.status(400).send({ data: 'ERROR: ' + err })
-    })
+  const user = await db.user.findOne({ where: { email: req.body.email } })
+
+  if (!user) {
+    return res.status(401).send({ message: 'user not found' })
+  }
+
+  try {
+    const match = await user.validatePassword(req.body.password)
+
+    if (!match) {
+      return res.status(401).send({ message: 'password not valid' })
+    }
+
+    const token = newToken(user)
+    return res.status(201).send({ token })
+  } catch (err) {
+    console.log(err)
+    return res.status(400).send({ message: 'hmm...maybe try again' })
+  }
 }
 
 export const protect = async (req, res, next) => {
