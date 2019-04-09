@@ -10,24 +10,24 @@ module.exports = (sequelize, DataTypes) => {
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        isEmail: true
-      }
+      validate: { isEmail: true },
+      unique: true
     },
     password: {
       allowNull: false,
       type: DataTypes.STRING
     }
   })
+
   User.beforeCreate((user, options) => {
     return bcrypt.hash(user.password, 8).then(hashedPw => {
       user.password = hashedPw
     })
   })
-
-  User.prototype.validatePassword = (plainTextPassword, hash) => {
-    return bcrypt.compare(plainTextPassword, hash).then(function(res) {
-      res == true
+  User.prototype.validatePassword = function(plainTextPassword) {
+    console.log(this.password, plainTextPassword)
+    return bcrypt.compare(plainTextPassword, this.password).then(match => {
+      console.log(match)
     })
   }
 
@@ -36,3 +36,6 @@ module.exports = (sequelize, DataTypes) => {
   }
   return User
 }
+
+// .then(function(res) {
+// 	      res == true

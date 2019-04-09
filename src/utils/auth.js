@@ -8,13 +8,14 @@ export const newToken = user => {
   })
 }
 
-export const verifyToken = token =>
-  new Promise((resolve, reject) => {
+export const verifyToken = token => {
+  return new Promise((resolve, reject) => {
     jwt.verify(token, config.secrets.jwt, (err, payload) => {
       if (err) return reject(err)
-      resolve(payload)
+      return resolve(payload)
     })
   })
+}
 
 export const signup = async (req, res) => {
   if (!req.body.email || !req.body.password) {
@@ -34,44 +35,50 @@ export const signup = async (req, res) => {
 }
 
 export const signin = async (req, res) => {
-  // if (!req.body.email || !req.body.password) {
-  //   return res.status(400).send({ message: 'must supply email and password' })
-  // }
-  // const user = await User.findOne({ email: req.body.email }).exec()
-  // if (!user) {
-  //   return res.status(401).send({ message: 'not Auth' })
-  // }
-  // try {
-  //   const match = await user.checkPassword(req.body.password)
-  //   if (!match) {
-  //     return res.status(401).send({ message: 'not Auth' })
-  //   }
-  //   const token = newToken(user)
-  //   return res.status(201).send({ token })
-  // } catch (err) {
-  //   console.log(err)
-  //   return res.status(400).send({ message: 'not Auth' })
-  // }
+  if (!req.body.email || !req.body.password) {
+    return res.status(400).send({ message: 'must supply email and password' })
+  }
+
+  db.user
+    .findOne({ where: { email: req.body.email } })
+    .then(user => {
+      if (!user.validatePassword(req.body.password)) {
+        throw new Error('Password is not valid.')
+      } else {
+        const token = newToken(user)
+        return res.status(201).send({ token })
+      }
+    })
+    .catch(err => {
+      console.log(err)
+      return res.status(400).send({ data: 'ERROR: ' + err })
+    })
 }
 
 export const protect = async (req, res, next) => {
-  // if (!req.headers.authorization) {
-  //   return res.status(401).end()
-  // }
-  // let token = req.headers.authorization.split('Bearer ')[1]
-  // if (!token) {
-  //   return res.status(401).end()
-  // }
-  // try {
-  //   const payload = await verifyToken(token)
-  //   const user = await User.findById(payload.id)
-  //     .select('-password')
-  //     .lean()
-  //     .exec()
-  //   req.user = user
-  //   next()
-  // } catch (e) {
-  //   console.log(e)
-  //   return res.status(401).end()
-  // }
+  if (!req.headers.authorization) {
+    return res.status(401).end()
+  }
+  let token = req.headers.authorization.split('Bearer ')[1]
+  if (!token) {
+    return res.status(401).end()
+  }
+
+  verifyToken(token)
+    .then(payload => {
+      db.user
+        .findByPk(payload.id)
+        .then(user => {
+          req.user = user
+          next()
+        })
+        .catch(err => {
+          console.log(err)
+          res.status(401).json({ data: err })
+        })
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(401).json({ data: err })
+    })
 }

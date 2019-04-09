@@ -3,6 +3,8 @@ import { createUser } from './user.controllers'
 
 const router = Router()
 
-router.post('/signup', createUser)
+router.route('/').get((req, res) => {
+  res.send({ message: 'ok' })
+})
 
 export default router
