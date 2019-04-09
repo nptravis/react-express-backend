@@ -21,18 +21,16 @@ export const signup = async (req, res) => {
     return res.status(400).send({ message: 'must supply email and password' })
   }
 
-  try {
-    db.user
-      .create(req.body)
-      .then(user => {
-        const token = newToken(user)
-        res.status(201).send({ token })
-      })
-      .catch(err => console.log(err))
-  } catch (err) {
-    console.log(err)
-    return res.status(400).end()
-  }
+  db.user
+    .create(req.body)
+    .then(user => {
+      const token = newToken(user)
+      res.status(201).send({ token })
+    })
+    .catch(err => {
+      console.log(err)
+      return res.status(400).json({ data: err })
+    })
 }
 
 export const signin = async (req, res) => {
