@@ -38,6 +38,7 @@ Object.keys(db).forEach(modelName => {
 })
 
 db.user = sequelize.import(__dirname + '/user.js')
+db.department = sequelize.import(__dirname + '/department.js')
 db.sequelize = sequelize
 db.Sequelize = Sequelize
 

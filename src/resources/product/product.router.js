@@ -1,10 +1,10 @@
 import { Router } from 'express'
-import { getOne, getAll } from './product.controller'
+import { getInfo, getAll } from './product.controller'
 
 const router = Router()
 
 router.route('/').get(getAll)
 
-router.route('/:id').get(getOne)
+router.route('/:id').get(getInfo)
 
 export default router
