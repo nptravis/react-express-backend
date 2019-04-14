@@ -1,88 +1,56 @@
-export const getOne = model => async (req, res) => {
+export const getOne = model => (req, res) => {
   model
     .findByPk(req.params.id)
     .then(instance => {
-      res.status(200).json({ data: instance })
+      res.status(200).json(instance)
     })
-    .catch(err => res.status(400).json({ data: err }))
-  // try {
-  //   const doc = await model
-  //     .findOne({ createdBy: req.user._id, _id: req.params.id })
-  //     .lean()
-  //     .exec()
-
-  //   if (!doc) {
-  //     return res.status(400).end()
-  //   }
-
-  //   res.status(200).json({ data: doc })
-  // } catch (e) {
-  //   console.error(e)
-  //   res.status(400).end()
-  // }
+    .catch(err => res.status(400).json(err))
 }
 
-export const getAll = model => async (req, res) => {
+export const getAll = model => (req, res) => {
   model
     .findAll()
     .then(instances => {
       res.status(200).json(instances)
     })
-    .catch(err => res.status(400).json({ data: err }))
+    .catch(err => res.status(400).json(err))
 }
 
-export const createOne = model => async (req, res) => {
-  const createdBy = req.user._id
-  try {
-    const doc = await model.create({ ...req.body, createdBy })
-    res.status(201).json({ data: doc })
-  } catch (e) {
-    console.error(e)
-    res.status(400).end()
-  }
-}
-
-export const updateOne = model => async (req, res) => {
-  try {
-    const updatedDoc = await model
-      .findOneAndUpdate(
-        {
-          createdBy: req.user._id,
-          _id: req.params.id
-        },
-        req.body,
-        { new: true }
-      )
-      .lean()
-      .exec()
-
-    if (!updatedDoc) {
-      return res.status(400).end()
-    }
-
-    res.status(200).json({ data: updatedDoc })
-  } catch (e) {
-    console.error(e)
-    res.status(400).end()
-  }
-}
-
-export const removeOne = model => async (req, res) => {
-  try {
-    const removed = await model.findOneAndRemove({
-      createdBy: req.user._id,
-      _id: req.params.id
+export const createOne = model => (req, res) => {
+  model
+    .create(req.body)
+    .then(instance => {
+      res.status(201).json(instance)
     })
+    .catch(err => {
+      res.status(400).json(err)
+    })
+}
 
-    if (!removed) {
-      return res.status(400).end()
-    }
+export const updateOne = model => (req, res) => {
+  const obj = {}
+  obj[model.name + '_id'] = req.params.id
+  model
+    .update(req.body, { where: obj })
+    .then(instance => {
+      res.status(201).json(instance)
+    })
+    .catch(err => {
+      res.statsu(400).json(err)
+    })
+}
 
-    return res.status(200).json({ data: removed })
-  } catch (e) {
-    console.error(e)
-    res.status(400).end()
-  }
+export const removeOne = model => (req, res) => {
+  const obj = {}
+  obj[model.name + '_id'] = req.params.id
+  model
+    .destroy({ where: obj })
+    .then(instance => {
+      res.status(201).json(instance)
+    })
+    .catch(err => {
+      res.statsu(400).json(err)
+    })
 }
 
 export const crudControllers = model => ({

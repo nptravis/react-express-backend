@@ -5,15 +5,10 @@ export const crud = crudControllers(db.department)
 
 export const getCategories = (req, res) => {
   db.sequelize
-    .query('CALL catalog_get_department_categories(:id)', {
-      replacements: { id: req.params.id },
-      type: db.sequelize.QueryTypes.RAW
+    .query('SELECT * FROM category WHERE department_id = :id', {
+      type: db.sequelize.QueryTypes.SELECT,
+      replacements: { id: req.params.id }
     })
-    .then(([results, metadata]) => {
-      res.status(200).json(results)
-    })
-    .catch(err => {
-      console.log(err)
-      res.status(400).json({ error: 'resource not found' })
-    })
+    .then(results => res.status(200).json(results))
+    .catch(err => res.status(404).json(err))
 }

@@ -4,9 +4,9 @@ import morgan from 'morgan'
 import config from './config'
 import cors from 'cors'
 import { sequelize } from './utils/db'
-import userRouter from './resources/user/user.router'
 import productRouter from './resources/product/product.router'
 import departmentRouter from './resources/department/department.router'
+import categoryRouter from './resources/category/category.router'
 // import itemRouter from './resources/item/item.router'
 // import listRouter from './resources/list/list.router'
 import { signup, signin, protect } from './utils/auth'
@@ -19,14 +19,19 @@ app.use(cors())
 app.use(json())
 app.use(urlencoded({ extended: true }))
 app.use(morgan('dev'))
+
+// Public API
+app.use('/api/product', productRouter)
+app.use('/api/department', departmentRouter)
+app.use('/api/category', categoryRouter)
+
+// Auth Routes
 app.post('/signup', signup)
 app.post('/signin', signin)
-app.use('/api/user', userRouter)
-app.use('/product', productRouter)
-app.use('/api/department', departmentRouter)
 
-// app.use('/api/item', itemRouter)
-// app.use('/api/list', listRouter)
+// Protected Routes
+app.use('/user/:id', protect)
+// app.get('user/:id/cart', cartRouter)
 
 export const start = async () => {
   try {

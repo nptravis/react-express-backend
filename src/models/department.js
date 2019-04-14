@@ -28,6 +28,8 @@ module.exports = function(sequelize, DataTypes) {
       timestamps: false
     }
   )
-
+  dept.association = function(db) {
+    dept.hasMany(db.category)
+  }
   return dept
 }
