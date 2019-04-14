@@ -26,7 +26,7 @@ export const getAll = model => async (req, res) => {
   model
     .findAll()
     .then(instances => {
-      res.status(200).json({ data: instances })
+      res.status(200).json(instances)
     })
     .catch(err => res.status(400).json({ data: err }))
 }

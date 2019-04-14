@@ -21,10 +21,10 @@ app.use(urlencoded({ extended: true }))
 app.use(morgan('dev'))
 app.post('/signup', signup)
 app.post('/signin', signin)
-app.use('/api', protect)
 app.use('/api/user', userRouter)
 app.use('/product', productRouter)
-app.use('/department', departmentRouter)
+app.use('/api/department', departmentRouter)
+
 // app.use('/api/item', itemRouter)
 // app.use('/api/list', listRouter)
 

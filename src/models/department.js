@@ -1,7 +1,7 @@
 /* jshint indent: 1 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define(
+  const dept = sequelize.define(
     'department',
     {
       department_id: {
@@ -28,4 +28,6 @@ module.exports = function(sequelize, DataTypes) {
       timestamps: false
     }
   )
+
+  return dept
 }

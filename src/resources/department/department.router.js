@@ -1,19 +1,21 @@
 import { Router } from 'express'
-import controllers from './department.controller'
+import { crud, getCategories } from './department.controller'
 
 const router = Router()
 
 // /api/department
 router
   .route('/')
-  .get(controllers.getAll)
-  .post(controllers.createOne)
+  .get(crud.getAll)
+  .post(crud.createOne)
 
 // /api/item/:id
 router
   .route('/:id')
-  .get(controllers.getOne)
-  .put(controllers.updateOne)
-  .delete(controllers.removeOne)
+  .get(crud.getOne)
+  .put(crud.updateOne)
+  .delete(crud.removeOne)
+
+router.route('/:id/category').get(getCategories)
 
 export default router
