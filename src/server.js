@@ -8,6 +8,8 @@ import productRouter from './resources/product/product.router'
 import departmentRouter from './resources/department/department.router'
 import categoryRouter from './resources/category/category.router'
 import productAttributeRouter from './resources/product_attribute/product_attribute.router'
+import attributeRouter from './resources/attribute/attribute.router'
+import attributeValueRouter from './resources/attribute_value/attribute_value.router'
 import productCategoryRouter from './resources/product_category/product_category.router'
 // import itemRouter from './resources/item/item.router'
 // import listRouter from './resources/list/list.router'
@@ -28,6 +30,9 @@ app.use('/api/product_attribute', productAttributeRouter)
 app.use('/api/product_category', productCategoryRouter)
 app.use('/api/department', departmentRouter)
 app.use('/api/category', categoryRouter)
+app.use('/api/attribute', attributeRouter)
+app.use('/api/attribute', attributeRouter)
+app.use('/api/attribute_value', attributeValueRouter)
 
 // Auth Routes
 app.post('/signup', signup)

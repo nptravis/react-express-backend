@@ -25,9 +25,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     {
       tableName: 'attribute_value',
-      associate: function(db) {
-        this.belongsTo(db.attribute)
-      }
+      timestamps: false
     }
   )
 }
