@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { crud } from './attribute_value.controller'
+import { crud, getAttributeValuesById } from './attribute_value.controller'
 
 const router = Router()
 
@@ -15,5 +15,7 @@ router
   .get(crud.getOne)
   .put(crud.updateOne)
   .delete(crud.removeOne)
+
+router.get('/catalog_get_attribute_values/:id', getAttributeValuesById)
 
 export default router

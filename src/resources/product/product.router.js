@@ -10,7 +10,7 @@ router
 
 router
   .route('/:id')
-  .get(crud.getOne)
+  .get(getInfo)
   .put(crud.updateOne)
   .delete(crud.removeOne)
 

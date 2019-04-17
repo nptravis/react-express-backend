@@ -1,5 +1,8 @@
 import { Router } from 'express'
-import { crud } from './product_attribute.controller'
+import {
+  crud,
+  catalogGetProductAttributes
+} from './product_attribute.controller'
 
 const router = Router()
 
@@ -10,7 +13,7 @@ router
 
 router
   .route('/:id')
-  .get(crud.getOne)
+  .get(catalogGetProductAttributes)
   .put(crud.updateOne)
   .delete(crud.removeOne)
 
