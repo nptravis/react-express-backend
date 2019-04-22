@@ -11,6 +11,7 @@ import productAttributeRouter from './resources/product_attribute/product_attrib
 import attributeRouter from './resources/attribute/attribute.router'
 import attributeValueRouter from './resources/attribute_value/attribute_value.router'
 import productCategoryRouter from './resources/product_category/product_category.router'
+import catalogDataRouter from './resources/catalog_data/catalog_data.router'
 // import itemRouter from './resources/item/item.router'
 // import listRouter from './resources/list/list.router'
 import { signup, signin, protect } from './utils/auth'
@@ -33,6 +34,7 @@ app.use('/api/category', categoryRouter)
 app.use('/api/attribute', attributeRouter)
 app.use('/api/attribute', attributeRouter)
 app.use('/api/attribute_value', attributeValueRouter)
+app.use('/api/catalog_data', catalogDataRouter)
 
 // Auth Routes
 app.post('/signup', signup)
